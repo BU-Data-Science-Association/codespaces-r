@@ -1,0 +1,407 @@
+---
+title: "Introduction to the Powers of R"
+subtitle: "plus RStudio, R Markdown"
+author: "BU Data Science Association"
+institute: "Boston University"
+date: "2025"
+output:
+  xaringan::moon_reader:
+    css: [default, metropolis, metropolis-fonts, "styles.css"]
+    lib_dir: libs
+    df_print: paged
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+class: center, middle
+
+# **Introduction to the Powers of R**
+### *plus RStudio, R Markdown*
+#### *BU Data Science Association - Boston University*
+#### *2025*
+
+---
+
+# **Summary**
+.pull-left[
+- **R is a statistical programming language**: Primarily used for statistics and data science
+- **Rich ecosystem**: Wide range of statistics-related libraries
+- **Popular in academia, government, and data analysis roles**
+- **Developed in the early 1990s**
+- **Works with 2D dataframes**, similar to Python's Pandas library
+]
+.pull-right[
+![](https://www.r-project.org/logo/Rlogo.png)
+]
+
+---
+
+# **R vs Python**
+### Key Differences
+
+- **Indexing**: R is **1-indexed**, whereas Python is **0-indexed**
+- **Learning curve**: R has a slightly steeper learning curve but is widely used in non-CS fields
+- **Performance**: The difference in speed is not huge; certain tasks are better suited for one of the other but this isn't a big deal
+
+---
+
+# **RStudio: The IDE for R**
+
+.pull-left[
+- **Integrated Development Environment (IDE)** for R
+- **Not required (you can use VS Code)** but many prefer it
+- **Tracks all loaded data**: dataframes, vectors, primitives (strings, ints, etc.)
+- **Built-in CSV viewer**
+- **Built-in R terminal**
+]
+.pull-right[
+![](https://www.rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png)
+]
+
+---
+
+# **R Markdown**
+
+.pull-left[
+- **Similar to Jupyter Notebooks**, but for R
+- Lets you **Mix code and markdown**
+- **Run code in sections**: `Run -> Run Current Chunk` or `Ctrl+Shift+Enter`
+- **Generates HTML output** from executed code
+- **Can create interactive slideshows and Word documents**
+]
+.pull-right[
+![](https://rmarkdown.rstudio.com/lesson-1.html)
+]
+
+---
+
+# **Basic R Syntax**
+### Before We Start
+
+- **File Extensions**: `.R` for base R, `.Rmd` for R Markdown
+- **Comments**: `#` for single-line comments
+- **Variable Assignment**: Uses `<-` instead of `=`
+  ```r
+  x <- 10  # Assigns 10 to x
+  ```
+- **Printing Output**: Use `print()`, but last item in a block is printed automatically
+  ```r
+  y <- 20
+  y  # Prints y
+  ```
+
+---
+
+# **Vectors & Indexing**
+### Creating Vectors
+
+```r
+vec1 <- c(1,2,3)
+vec2 <- c(2,4,6)
+```
+
+### Indexing
+- Dataframe indexing uses **row, column format**
+  ```r
+  A[1, 2]  # Row 1, Column 2
+  ```
+- **Remember:** R indices **start at 1**, not 0!
+
+---
+
+# **Functions & Piping**
+### Defining Functions
+```r
+functionname <- function(arguments) {
+  # Do some stuff
+}
+```
+
+### Using Pipes (`%>%`)
+
+- Pipes allow chaining functions for **readability**
+- Example:
+  ```r
+  round(exp(diff(log(x))), 1)
+  ```
+  **is the same as**
+  ```r
+  x %>% log() %>% diff() %>% exp() %>% round(1)
+  ```
+- **Think of pipes as:** *This* and *Then*
+
+---
+
+
+name: Libraries
+
+# Libraries
+```{r}
+# import statements
+library(tidyverse) 
+# Most important one, has a ton of stuff
+library(readr) # To read CSV
+library(plotly) # Interactive visualizations, python has its own version
+library(DT) # to transfer interactive tables to js
+library(readxl) # To read excel files
+library(wordcloud) # for wordcloud
+library(leaflet) # for interactive maps
+library(knitr)
+```
+
+`library(<library_name>)` is the R equivalent of importing python packages
+
+---
+
+class: left, top
+# Reading in Data (& output)
+
+```{r}
+# TODO: Read in dogs.csv
+dog_data <- read_csv("data/dogs.csv") #import from csv
+# note the assignment operator.
+```
+
+---
+
+class: left, top
+
+# Basic Data Manipulation
+```{css, echo = F}
+table {
+  font-size: 12px;     
+}
+```
+
+```{r}
+# TODO: Create a table with the 25 youngest dogs
+
+dog_data <- dog_data[order(dog_data$AnimalName, decreasing=TRUE),]
+head(dog_data,25)
+```
+
+
+
+---
+
+
+# Print/Display Data
+.pull-left[
+```{r eval=TRUE}
+# TODO: Read in zips.xlsx and display a few of its lines
+zips_data <- read_excel("data/zips.xlsx") 
+#import from excel
+head(zips_data,3)
+```
+]
+
+.pull-right[
+```{r eval=TRUE}
+# TODO: Add column names to the zip codes (ZipCode and Population)
+
+colnames(zips_data) <- c(
+"ZipCode", "Population")
+head(zips_data,3)
+```
+]
+
+### No need for a print statement!
+
+---
+
+# GGplot2 bar graph
+
+```{r fig.dim=c(6,3), out.width="80%"}
+# TODO: Create a bar chart with ggplot comparing the total number of dogs of each breed
+
+head_data <- head(dog_data, 10)
+plot <- ggplot(data = head_data, aes(x = BreedName)) + geom_bar(fill="darkgreen")
+plot
+```
+
+
+---
+
+# Sorted Plot
+
+```{r fig.dim=c(6,3), out.width="80%"}
+# TODO: Increase the amount of data, add tilted x labels, add data labels, sort it in descending order
+head_data <- head(dog_data, 100)
+plot1 <- ggplot(head_data, aes(fct_infreq(BreedName))) + geom_bar(fill="maroon") +   theme(axis.text.x = element_text(angle = 45, hjust=1)) + geom_text(stat = "count", aes(label = after_stat(count)), vjust = -0.1)
+plot1
+```
+
+---
+
+# Interactive plot (plotly)
+
+```{r fig.dim=c(6,5), out.width="80%"}
+# TODO: Build an interactive equivalent of the plot above using plotly
+
+ggplotly(plot1)
+```
+
+---
+
+# Simple Data Exploration
+### Helps you get a brief idea of what you're looking at
+
+```{r}
+# Print summary information about the data
+
+summary(zips_data)
+```
+
+---
+
+# Combining datasets
+
+```{r}
+merged_dog <- merge(dog_data, zips_data, by="ZipCode")
+head(merged_dog,5)
+```
+
+---
+
+# `Select` to filter out columns
+```{r}
+# TODO: TODO: Select only a few important columns (set aside the three useless ones)
+
+merged_dog <- merged_dog %>% select('AnimalName', 'AnimalBirthYear', 'AnimalGender', 'BreedName', 'ZipCode', 'Population')
+head(merged_dog,5)
+
+```
+
+---
+
+# `Filter` to filter out rows
+### `Arrange` is another way to sort
+
+```{r}
+# TODO: Find all the dogs named Fido ("FIDO" by the standards of the dataset) and sort them by descending Birth Year and then Breed Name
+fidos <- merged_dog %>% filter(AnimalName == "FIDO") %>% arrange(desc(AnimalBirthYear), desc(BreedName))
+head(fidos,5)
+```
+
+---
+
+# `Mutate` to create new column
+
+```{r}
+# TODO: Create a crude age column by subtracting the dog's birth year from 2025
+fidos <- fidos %>% mutate(age = 2023 - AnimalBirthYear)
+head(fidos,5)
+```
+
+---
+
+# `Count` for counting
+
+```{r}
+# TODO: Count the number of male vs female dogs in the dataset
+
+merged_dog %>% count(AnimalGender)
+```
+
+- Returns a table with two columns, the thing you're counting, and its value
+
+
+
+---
+
+# Word Counting
+
+```{r}
+# TODO: Count up the number of occurrences of each name, filter out the following common entries that aren't names: "UNKNOWN", "NAME NOT PROVIDED", "NOT"
+words <- dog_data %>% select(AnimalName) %>% count(AnimalName, sort=TRUE)
+words2 <- words %>% filter(AnimalName != "UNKNOWN" & AnimalName != "NAME NOT PROVIDED" & AnimalName != "NOT")
+head(words2, 5)
+```
+
+---
+
+# Word Cloud Function
+```{r}
+# TODO: Build a wordcloud of the most common dog names
+
+cloud <- wordcloud(words = words2$AnimalName, freq = words2$n, min.freq = 100,           max.words=200, random.order=FALSE)
+cloud
+```
+
+
+# Lat/long data
+```{r}
+
+lat_long <- read_csv("data/lat_long.csv")
+head(lat_long,3)
+```
+
+
+##  Merging
+```{r}
+# TODO: Merge simple_dog with lat_long to acquire the latitude and longitude of each dog's zip code
+merged_dog <- merge(merged_dog, lat_long, by="ZipCode")
+head(merged_dog,5)
+```
+
+---
+
+# Boston Terrier data trimming
+```{r}
+# We're going to create a bubble map visualizing Boston Terrier population in NYC
+# Ingredients: dog_data, zips_data, lat_long
+# Hint: Use filter, select, count, merge (twice), and mutate
+# For each zip code, we need the latitude, longitude, and terriers per 10000 people (call this column Density for the sake of the exercise)
+terriers <- dog_data %>% filter(
+BreedName == "Boston Terrier")
+
+counter <- terriers %>% count(ZipCode, sort=TRUE)
+
+counter <- merge(counter, zips_data, by="ZipCode")
+counter <- merge(counter, lat_long, by="ZipCode")
+counter <- counter %>% mutate(Density = 10000 * n/Population) %>% # Calculate a density column representing Boston Terriers per 10000 people in each zip code
+select(Density, Latitude, Longitude)
+head(counter,5)
+
+# fidos %>% count(ZipCode, sort=TRUE)
+
+```
+
+---
+
+# Maps!
+
+```{r}
+mybins <- seq(0, 36, by=(36/9))
+mypalette <- colorBin( palette="YlOrRd", domain=counter$Density,
+na.color="transparent", bins=mybins)
+
+map <- leaflet(counter) %>% # TODO
+  addTiles() %>%
+    setView(-74.00, 40.71, zoom = 12) %>%
+  addCircleMarkers(~Longitude, ~Latitude, 
+    fillColor = ~mypalette(Density), fillOpacity = 1,
+    color="white", radius=~(Density/(35/12))+5, stroke=FALSE)
+```
+
+
+---
+# Boston Terrier Density in NYC
+```{r echo=FALSE}
+map
+```
+---
+## Random extra stuff if there is time!
+
+```{r}
+linearMod <- lm(Population ~ age, data=fidos)  # build linear regression model on full data
+```
+
+
+```{r}
+print(linearMod)
+```
+
+

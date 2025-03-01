@@ -1,3 +1,9 @@
+# BU Data Science Association: R Workshop in Github Codespaces
+### Thanks to David Smith for template (his readme and instructions for how to use are below; we have only replaced his workshop)
+
+
+
+
 # Zero-setup R workshops with GitHub Codespaces
 
 This is the repository supporting the presentation "Zero-setup R workshops with GitHub Codespaces".
