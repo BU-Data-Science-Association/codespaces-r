@@ -13,14 +13,6 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
----
-
-class: center, middle
-
-# **Introduction to the Powers of R**
-### *plus RStudio, R Markdown*
-#### *BU Data Science Association - Boston University*
-#### *2025*
 
 ---
 
@@ -404,4 +396,10 @@ linearMod <- lm(Population ~ age, data=fidos)  # build linear regression model o
 print(linearMod)
 ```
 
-
+---
+# Announcements
+### E-Board
+- E-board Applications due Tonight - Interviews beginning in a few days
+### Events to Check Out
+- Tomorrow: Spark! Tech Talk on data viz
+- March 30: WiDS Datathon
