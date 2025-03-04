@@ -1,7 +1,24 @@
 # BU Data Science Association: R Workshop in Github Codespaces
 ### Thanks to David Smith for template (his readme and instructions for how to use are below; we have only replaced his workshop)
 
-
+**Function Sheet (main goals)**
+```r
+library()
+print()
+read_csv()
+read_excel()
+head()
+order()
+colnames()
+ggplot()
+ggplotly()
+summary()
+merge()
+select()
+filter()
+mutate()
+count()
+```
 
 
 # Zero-setup R workshops with GitHub Codespaces
